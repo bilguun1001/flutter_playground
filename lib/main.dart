@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// TODO: When you press the button, change the background color of the app
 class BodyWidget extends StatelessWidget {
   //String fruit = 'Apples';
   final colorNotfier = ValueNotifier<Color>(Colors.purple.shade700);
@@ -57,7 +58,6 @@ class BodyWidget extends StatelessWidget {
     );
   }
 }
-//bla2
 
 
 final colorList = <Color>[
