@@ -1,12 +1,21 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'counter_screen.dart';
+import 'service_locator.dart';
 
-class CounterViewModel extends ChangeNotifier { // <-- extends ChangeNotifier
-  int _counter = 0;
+void main() {
+  setupServiceLocator();
+  runApp(MyApp());
+}
 
-  int get counter => _counter;
-
-  void increment() {
-    _counter++;
-    notifyListeners();                          // <-- notify listeners
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: CounterScreen(),
+    );
   }
 }
