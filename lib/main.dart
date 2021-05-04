@@ -1,92 +1,49 @@
 import 'package:flutter/material.dart';
-import 'database_helper.dart';
-
-void main() => runApp(MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'dart:math';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SQFlite Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: FutureBuilder(
+        future: _fbApp,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Sorry, there was an error');
+          } else if (snapshot.hasData) {
+            return MyHomePage();
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
-      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-
-  // reference to our single class that manages the database
-  final dbHelper = DatabaseHelper.instance;
-
-  // homepage layout
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('sqflite'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              child: Text('insert', style: TextStyle(fontSize: 20),),
-              onPressed: _insert,
-            ),
-            ElevatedButton(
-              child: Text('query', style: TextStyle(fontSize: 20),),
-              onPressed: _query,
-            ),
-            ElevatedButton(
-              child: Text('update', style: TextStyle(fontSize: 20),),
-              onPressed: _update,
-            ),
-            ElevatedButton(
-              child: Text('delete', style: TextStyle(fontSize: 20),),
-              onPressed: _delete,
-            ),
-          ],
-        ),
+      body: Container(
+        child: Column(children: [
+          ElevatedButton(
+              child: Text('Update firebase database'),
+              onPressed: () {
+                print('hi');
+                DatabaseReference _testRef = FirebaseDatabase.instance.reference().child("test");
+                _testRef.set("Hello ${Random().nextInt(100)}");
+              }
+          )
+        ]),
       ),
     );
-  }
-
-  // Button onPressed methods
-
-  void _insert() async {
-    // row to insert
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnName : 'Bob',
-      DatabaseHelper.columnAge  : 23
-    };
-    final id = await dbHelper.insert(row);
-    print('inserted row id: $id');
-  }
-
-  void _query() async {
-    final allRows = await dbHelper.queryAllRows();
-    print('query all rows:');
-    allRows.forEach(print);
-  }
-
-  void _update() async {
-    // row to update
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnId   : 1,
-      DatabaseHelper.columnName : 'Mary',
-      DatabaseHelper.columnAge  : 32
-    };
-    final rowsAffected = await dbHelper.update(row);
-    print('updated $rowsAffected row(s)');
-  }
-
-  void _delete() async {
-    // Assuming that the number of rows is the id for the last row.
-    final id = await dbHelper.queryRowCount();
-    final rowsDeleted = await dbHelper.delete(id);
-    print('deleted $rowsDeleted row(s): row $id');
   }
 }
