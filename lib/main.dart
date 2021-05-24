@@ -35,7 +35,7 @@ class MyHomePage extends StatelessWidget {
             ListTile(
               title: Text('Sports app'),
               onTap: () => html.window.open(
-                'https://suragch.dev/apps/mongolcode/',
+                'https://play.google.com/store/apps/details?id=com.bilguun.skima&fbclid=IwAR2NIjfYlVqZq0YJG8jmW_gMYs2tx33fsdMz9fyWyoPtnJ1IBa0DGrJSWzY',
                 'Sports app',
               ),
             )
